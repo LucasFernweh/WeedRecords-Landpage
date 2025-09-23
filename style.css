@@ -155,7 +155,8 @@ header {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 50vh;
+    width: 20vh;
+    height: 20vh;
 }
 
 .carousel-prev-btn,
