@@ -440,7 +440,7 @@ body {
     }
     
     section{
-        height: auto; /* Deixa a altura se ajustar ao conteúdo em mobile */
+        height: 25vh; /* Deixa a altura se ajustar ao conteúdo em mobile */
     }
 
 
@@ -502,4 +502,5 @@ body {
         height: 5vw;
     }
 }
+
 
