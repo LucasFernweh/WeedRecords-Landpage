@@ -187,7 +187,7 @@ header {
 /* css das sections do site */
 
 section{
-    height: 25vh;
+    height: 50vh;
 }
 
 
@@ -233,8 +233,8 @@ body {
     text-decoration: none;
     color: #fff;
     font-weight: bold;
-    margin-left: 1.5vh;
-    margin-right: 1.5vh;
+    margin-left: 2vh;
+    margin-right: 2vh;
     /* REMOVIDO: position: relative e padding-bottom do <a> para não afetar a caixa */
 }
 
@@ -244,6 +244,7 @@ body {
     position: relative; /* O <h3> agora define o ponto 0,0 para o ::after */
     display: inline-block; /* Garante que a caixa do H3 se ajuste ao tamanho do texto */
     padding-bottom: 3px; /* Espaço para o sublinhado */
+    font-size: 12px;
 }
 
 /* 2. Aplica o sublinhado APENAS ao H3 */
@@ -371,12 +372,17 @@ body {
     opacity: 0.8;
 }
 
+/* ========================================================== */
+/* MEDIA QUERY PARA DISPOSITIVOS MÓVEIS (MAX-WIDTH: 767px) */
+/* ========================================================== */
+
 @media (max-width: 767px) {
     
     /* === GERAL/BODY === */
     body {
-        /* Padding inferior responsivo para acomodar o footer mobile */
-        padding-bottom: 15vw; 
+        /* O padding-bottom agora deve ser 0 ou ajustado manualmente, 
+           pois o footer não está mais 'fixed'. */
+        padding-bottom: 0; 
     }
 
     /* --- 1. CABEÇALHO (Mobile) --- */
@@ -388,8 +394,10 @@ body {
     }
 
     .logo img {
-        height: 10vh; 
-        width: 10vh;
+        position: relative;
+        bottom: 4vh;
+        height: 38vh; 
+        width: 38vh;
     }
 
     /* Torna o Hambúrguer visível em mobile */
@@ -419,7 +427,7 @@ body {
     /* --- 3. CARROSSEL E SECTIONS (Mobile) --- */
 
     .carousel-container {
-        margin: 3vh 0; 
+        margin: 15vh 0; 
     }
     
     .carousel-slide img {
@@ -439,6 +447,11 @@ body {
     /* --- 4. FOOTER (Mobile) --- */
 
     footer {
+        /* *** MUDANÇA ESSENCIAL: Retira o footer do fluxo fixo *** */
+        position: static !important;
+        bottom: auto !important;
+        /* ****************************************************** */
+        
         /* Padding e fonte responsivos */
         padding: 4vw 0 2vw; 
         font-size: 3vw; 
@@ -460,6 +473,7 @@ body {
 
     .redesocial h3 {
         padding-bottom: 0.5vw;
+        font-size: 10px;
     }
 
     .redesocial h3::after {
@@ -474,18 +488,18 @@ body {
     /* --- 5. BOTÃO "VOLTAR AO TOPO" (Mobile) --- */
 
     #backToTop {
-        bottom: 18vw; 
+        /* O botão "Voltar ao Topo" geralmente continua fixo, 
+           mas precisa de um novo ajuste de posição */
+        bottom: 5vw; /* Ajustado para não colidir com o footer que agora é estático */
         right: 5vw;
     }
 
     #backToTop img {
-        width: 10vw; 
-        height: 10vw;
-        padding: 1.5vw; 
+        position: relative;
+        bottom: -3vh;
+        left: 3vh;
+        width: 5vw; 
+        height: 5vw;
     }
 }
-
-
-
-
 
