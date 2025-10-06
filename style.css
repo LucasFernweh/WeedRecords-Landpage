@@ -187,7 +187,7 @@ header {
 /* css das sections do site */
 
 section{
-    height: auto;
+    height: 25vh;
 }
 
 
@@ -484,6 +484,7 @@ body {
         padding: 1.5vw; 
     }
 }
+
 
 
 
