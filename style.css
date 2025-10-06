@@ -233,8 +233,8 @@ body {
     text-decoration: none;
     color: #fff;
     font-weight: bold;
-    margin-left: 5vh;
-    margin-right: 5vh;
+    margin-left: 2.5vh;
+    margin-right: 2.5vh;
     /* REMOVIDO: position: relative e padding-bottom do <a> para não afetar a caixa */
 }
 
@@ -370,3 +370,4 @@ body {
 #backToTop:hover img {
     opacity: 0.8;
 }
+
