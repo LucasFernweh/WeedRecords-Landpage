@@ -497,12 +497,13 @@ body {
     #backToTop img {
         opacity: 90%;
         position: relative;
-        bottom: 25vh;
-        left: -2vh;
+        bottom: 10vh;
+        left: 0.5vh;
         width: 12vw;
         height: 12vw;
     }
 }
+
 
 
 
