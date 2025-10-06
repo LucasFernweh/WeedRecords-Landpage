@@ -495,12 +495,14 @@ body {
     }
 
     #backToTop img {
+        opacity: 90%;
         position: relative;
-        bottom: -3vh;
-        left: 3vh;
-        width: 5vw; 
-        height: 5vw;
+        bottom: 25vh;
+        left: -2vh;
+        width: 12vw;
+        height: 12vw;
     }
 }
+
 
 
