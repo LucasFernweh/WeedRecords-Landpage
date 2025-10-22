@@ -1,128 +1,262 @@
+/* ===========================
+    RESET / BASE
+    =========================== */
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
     font-family: "Montserrat", sans-serif;
     font-optical-sizing: auto;
-    font-weight: <weight>;
+    font-weight: 400;
     font-style: normal;
 }
 
+body {
+    /* Espaço para o Header FIXO (70px) */
+    padding-top: 70px;
+    margin: 0;
+    padding-bottom: 0;
+}
 
+/* Previne scroll quando o menu está aberto */
+.menu-open {
+    overflow: hidden;
+}
+
+
+/* ===========================
+    HEADER (FIXED e por Cima)
+    =========================== */
 header {
+    /* FIXED para fixação no topo e controle de z-index */
+    position: fixed;
+    top: 0;
+    width: 100%;
+    /* Mantenha como flex, mas os elementos filhos serão fixed */
     display: flex;
-    width: auto;
-    height: 20vh;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: left;
+    height: 70px;
+    padding: 0 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    /* Z-index Alto (1010) para SEMPRE cobrir o menu */
+    z-index: 1010;
 }
 
-.logo img {
-    height: 30vh;
-    width: 30vh;
-    background: white;
-}
-
-.hamburguer{
-    position: relative;
-    left: 5%;
-    top: 30%;
-    width: 20px;
-    height: 15px;
+/* Hambúrguer (FIXED e Isolado) */
+.hamburguer {
     display: flex;
+    /* CORREÇÃO: FIXED para isolamento total e não deslocar */
+    position: fixed;
+    left: 20px;
+    top: 35px;
+    /* Centralizado verticalmente (70px / 2) */
+    transform: translateY(-50%);
+    width: 28px;
+    height: 20px;
     flex-direction: column;
     justify-content: space-between;
     cursor: pointer;
+    z-index: 1010;
 }
 
 .hamburguer span {
-    position: absolute;
     display: block;
-    height: 3px;
+    height: 2px;
     width: 100%;
-    background: black;
+    background: #000;
     border-radius: 2px;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }
 
-.hamburguer span:nth-child(1){
-    top: 0;
+.hamburguer.active span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
 }
 
-.hamburguer span:nth-child(2){
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.hamburguer span:nth-child(3){
-    bottom: 0;
-}
-
-.hamburguer.active span:nth-child(1){
-    top: 40.6%;
-    transform: rotate(45deg);
-}
-.hamburguer.active span:nth-child(2){
+.hamburguer.active span:nth-child(2) {
     opacity: 0;
 }
-.hamburguer.active span:nth-child(3){
-    top: 40.6%;
-    bottom: auto;
-    transform: rotate(-45deg);
+
+.hamburguer.active span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
 }
 
-.menuWindow{
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    border: solid 1px transparent;
-    border-radius: 3px;
+/* Logo (FIXED e Isolada) */
+.logo {
+    /* CORREÇÃO: FIXED + top/left/transform garantem que ele nunca desloque */
     position: fixed;
-    top: 20vh;
-    left: 0px;
-    width: 50vh;
-    height: 50vh;
-    transition: transform 0.3s ease-in-out, border 0.3s ease-in-out;
+    left: 90%;
+    top: 80px;
+    /* Centralizado verticalmente */
+    transform: translate(-50%, -50%);
 }
 
-.menuWindow li{
-    margin-top: 5vh;
-    margin-bottom: 5vh;
-    text-align: center;
-    list-style-type: none;
+.logo img {
+    height: 200px;
+    width: 200px;
 }
 
-.menuWindow a{
-    color: transparent;
-    text-decoration: none;
-    list-style-type: none;
-    transition: color 0.1s ease-in-out;
-}
 
-.menuWindow.active{
-    top: 20vh;
+/* ===========================
+    NAV: Menu Dropdown (MOBILE: Desliza por BAIXO do Header)
+    =========================== */
+.menuWindow {
+    display: flex;
+    flex-direction: column;
+    /* CRÍTICO: FIXED para alinhar à viewport e garantir o z-index */
+    position: fixed;
+
+    /* MOBILE: Começa ABAIXO do header */
+    top: 70px;
+    left: 0;
+
+    width: 100%;
+    height: calc(100vh - 70px);
+    /* Altura total menos header */
+    max-height: calc(100vh - 70px);
+    overflow-y: auto;
+
     background-color: #f7f7f7;
-    border: solid 1px black;
-    width: 50vh;
-    height: 50vh;
-    color: black;
-    border-radius: 3px;
-    box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    padding: 0;
+
+    /* MOBILE: Z-index MENOR que header para ficar POR BAIXO */
+    z-index: 1000;
+
+    /* ESTADO INICIAL (FECHADO): Usa TRANSFORM para deslizar */
+    transform: translateY(-100%);
+    visibility: hidden;
+
+    /* DURAÇÃO E RITMO LENTO (0.6s) */
+    transition: transform 0.6s ease-out, visibility 0.6s;
 }
 
-.menuWindow.active a{
-    color: #333;
+.menuWindow.active {
+    /* ESTADO FINAL (ABERTO): Desce 0 pixels do seu ponto de parada (top: 70px) */
+    transform: translateY(0);
+    visibility: visible;
 }
 
+/* Estilo dos itens de menu (Padrão: Mobile - Coluna e Centralizado) */
+.menuWindow ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    width: 100%;
+}
+
+.menuWindow li {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.menuWindow li:last-child {
+    border-bottom: none;
+}
+
+.menuWindow a {
+    color: #222;
+    text-decoration: none;
+    position: relative;
+    font-weight: 500;
+    font-size: 16px;
+    display: block;
+    padding: 10px 20px;
+}
+
+/* Hover em Mobile (sem underline animado, apenas background) */
+.menuWindow a::after {
+    display: none;
+}
+
+.menuWindow a:hover {
+    background-color: #eee;
+}
+
+/* =======================================
+    MEDIA QUERY: DESKTOP (Layout interno - Linha)
+    ======================================= */
+@media (min-width: 768px) {
+    .menuWindow {
+        position: static;
+        transform: none;
+        visibility: visible;
+        height: auto;
+        max-height: none;
+        padding: 14px 0;
+        background-color: transparent;
+        border-top: none;
+        box-shadow: none;
+        width: auto;
+        z-index: auto;
+        overflow-y: visible;
+    }
+
+    /* Layout dos itens: de coluna para linha */
+    .menuWindow ul {
+        flex-direction: row;
+        gap: 48px;
+        padding: 0;
+    }
+
+    .menuWindow li {
+        width: auto;
+        border-bottom: none;
+        text-align: left;
+    }
+
+    .menuWindow a {
+        padding: 0 0 6px 0;
+        font-size: 14px;
+        display: inline-block;
+    }
+
+    /* Volta o efeito de hover de underline para desktop */
+    .menuWindow a::after {
+        display: block;
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        background: #000;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.28s cubic-bezier(.2, .9, .2, 1);
+    }
+
+    .menuWindow a:hover::after {
+        transform: scaleX(1);
+    }
+
+    .menuWindow a:hover {
+        background-color: transparent;
+    }
+}
+
+
+/* Fundo translúcido */
 .fundo-translucido {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 99;
+    background-color: rgba(0, 0, 0, 0.45);
+    z-index: 900;
+    /* Abaixo do menu */
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.25s ease;
 }
 
 .fundo-translucido.active {
@@ -130,6 +264,9 @@ header {
     visibility: visible;
 }
 
+/* ===========================
+    CARROSSEL
+    =========================== */
 /* Estilos para o novo carrossel */
 .carousel-container {
     margin: 5vh 0vh 5vh 0vh;
@@ -152,7 +289,8 @@ header {
 
 .carousel-slide {
     flex-shrink: 0;
-    width: 100%; /* Cada slide ocupa a largura total do contêiner */
+    width: 100%;
+    /* Cada slide ocupa a largura total do contêiner */
 }
 
 .carousel-slide img {
@@ -184,47 +322,38 @@ header {
     right: 10px;
 }
 
-/* css das sections do site */
+/* MEDIA QUERY: DESKTOP - Ajustes específicos */
+@media (min-width: 768px) {
 
-section{
-    height: 50vh;
+    .carousel-prev-btn,
+    .carousel-next-btn {
+        /* Volta o z-index alto para ficar acima de outros elementos na seção */
+        z-index: 1200;
+    }
 }
 
+/* ===========================
+    FOOTER E BACK-TO-TOP
+    =========================== */
 
-/* Estilização básica do Footer */
-/* --- 1. ESTILOS DO FOOTER FIXO E CORES --- */
+/* FOOTER (Não Fixo) */
 footer {
-    position: fixed;
+    position: relative;
     bottom: 0;
     left: 0;
     width: 100%;
     z-index: 1000;
-
     background-color: #000;
     color: #fff;
     padding: 20px 20px 10px;
     text-align: center;
-    font-family: Arial, sans-serif;
 }
 
-body {
-    padding-bottom: 90px; /* Ajuste este valor conforme a altura do seu footer */
-    margin: 0;
-}
-
-
-/* --- 2. LAYOUT E LINKS SOCIAIS --- */
 .social-links-container {
     display: flex;
     justify-content: center;
     gap: 30px;
     margin-bottom: 15px;
-}
-
-.social-links-container img{
-    width: 30px;
-    height: 30px;
-    padding-right: 8px;
 }
 
 .redesocial {
@@ -235,19 +364,16 @@ body {
     font-weight: bold;
     margin-left: 2vh;
     margin-right: 2vh;
-    /* REMOVIDO: position: relative e padding-bottom do <a> para não afetar a caixa */
 }
 
-/* 1. Torna o H3 o Pai de Posicionamento para o sublinhado */
 .redesocial h3 {
     margin: 0;
-    position: relative; /* O <h3> agora define o ponto 0,0 para o ::after */
-    display: inline-block; /* Garante que a caixa do H3 se ajuste ao tamanho do texto */
-    padding-bottom: 3px; /* Espaço para o sublinhado */
+    position: relative;
+    display: inline-block;
+    padding-bottom: 3px;
     font-size: 12px;
 }
 
-/* 2. Aplica o sublinhado APENAS ao H3 */
 .redesocial h3::after {
     content: '';
     position: absolute;
@@ -255,28 +381,28 @@ body {
     height: 2px;
     bottom: 0;
     left: 0;
-    background-color: #aaa; /* Cinza breve */
-    
-    /* Configuração inicial da animação */
-    transform: scaleX(0); 
-    transform-origin: right; /* Começa à direita */
+    background-color: #aaa;
+    transform: scaleX(0);
+    transform-origin: right;
     transition: transform 0.3s ease-out;
 }
 
-/* 3. Efeito Hover no elemento PAI (o link <a>) ativa o sublinhado no H3 */
 .redesocial:hover h3::after {
-    transform: scaleX(1); /* Expande a largura para 100% (cobrindo apenas o H3) */
-    transform-origin: left; /* Expande da direita para a esquerda */
+    transform: scaleX(1);
+    transform-origin: left;
 }
 
-/* NOTA: Os estilos da imagem (se houver ícones) podem ser mantidos ou reajustados. */
 .redesocial img {
-    width: 24px;
-    height: 24px;
+    width: 25px;
+    height: 25px;
     margin-right: 6px;
 }
 
-/* --- 3. ESTILIZAÇÃO DA LOGO E COPYRIGHT --- */
+.youtube-link img {
+    width: 30px;
+    height: 30px;
+}
+
 .footer-info {
     display: flex;
     flex-direction: column;
@@ -293,64 +419,38 @@ body {
     font-size: 0.8em;
     line-height: 1.4;
     margin: 0;
-    /* Necessário para que o span interno possa ter "overflow: hidden" */
     position: relative;
-    display: inline-block; /* Garante que o span interno não quebre o layout */
+    display: inline-block;
 }
-/* --- 4. EFEITO DE BRILHO APENAS NAS LETRAS "WeedRecords" --- */
+
 .weedrecords-highlight {
-    /* Cor de Fundo: O gradiente que se move por baixo */
-    background: linear-gradient(
-        90deg,
-        #556B2F 0%,     /* Verde Musgo (Cor do texto) */
-        #F5F5DC 20%,     /* Bege (Cor do Brilho) */
-        #556B2F 40%      /* Verde Musgo (Cor do texto) */
-    );
-    
-    /* Tamanho do gradiente - O dobro para permitir a movimentação */
-    background-size: 200% 100%; 
-    
-    /* Configurações Essenciais para o Efeito */
-    color: transparent; /* Torna o texto transparente para revelar o fundo */
-    -webkit-background-clip: text; /* Mantenha o prefixo para melhor compatibilidade */
-    background-clip: text; /* Corta o fundo (gradiente) no formato das letras */
-    
-    /* Efeito para o texto de forma geral */
+    background: linear-gradient(90deg,
+            #556B2F 0%,
+            #F5F5DC 20%,
+            #556B2F 40%);
+    background-size: 200% 100%;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
     font-weight: bold;
     display: inline-block;
-    
-    /* Aplica a animação */
     animation: shine-text 3s linear infinite;
 }
 
-/* Define a animação de movimento do gradiente */
 @keyframes shine-text {
     0% {
-        background-position: 100% 0; /* Começa à direita, fora de vista */
+        background-position: 100% 0;
     }
+
     100% {
-        background-position: -100% 0; /* Move-se para a esquerda, completando a passagem */
+        background-position: -100% 0;
     }
 }
 
-/* Define a animação do brilho */
-@keyframes shine {
-    0% {
-        left: -100%; /* Começa fora à esquerda */
-    }
-    50% {
-        left: 100%; /* Passa por toda a palavra */
-    }
-    100% {
-        left: -100%; /* Volta para o início para reiniciar o ciclo */
-    }
-}
-
-/* --- 5. BOTÃO "VOLTAR AO TOPO" --- */
-
+/* BACK TO TOP */
 #backToTop {
     position: fixed;
-    bottom: 85px;
+    bottom: 20px;
     right: 30px;
     z-index: 1001;
     cursor: pointer;
@@ -372,138 +472,40 @@ body {
     opacity: 0.8;
 }
 
-/* ========================================================== */
-/* MEDIA QUERY PARA DISPOSITIVOS MÓVEIS (MAX-WIDTH: 767px) */
-/* ========================================================== */
+/* =======================================
+    MEDIA QUERY: DESKTOP - Ajustes específicos
+    ======================================= */
+@media (min-width: 768px) {
 
-@media (max-width: 767px) {
-    
-    /* === GERAL/BODY === */
-    body {
-        /* O padding-bottom agora deve ser 0 ou ajustado manualmente, 
-           pois o footer não está mais 'fixed'. */
-        padding-bottom: 0; 
-    }
-
-    /* --- 1. CABEÇALHO (Mobile) --- */
-
-    header {
-        /* Altura proporcional em mobile */
-        height: 12vh; 
-        padding: 0 4vw; 
-    }
-
-    .logo img {
-        position: relative;
-        bottom: 4vh;
-        height: 38vh; 
-        width: 38vh;
-    }
-
-    /* Torna o Hambúrguer visível em mobile */
-    .hamburguer {
-        display: flex; 
-        width: 7vw; 
-        height: 5vw; 
-    }
-    
-    .hamburguer span {
-        height: 1vw; /* Espessura da linha responsiva */
-    }
-
-    /* --- 2. MENU LATERAL (Mobile) --- */
-
-    .menuWindow{
-        top: 12vh; /* Abaixo do header mobile */
-        width: 75vw; 
-        height: 88vh; 
-    }
-
-    .menuWindow li{
-        margin: 5vh 0; 
-        font-size: 5vw; 
-    }
-    
-    /* --- 3. CARROSSEL E SECTIONS (Mobile) --- */
-
-    .carousel-container {
-        margin: 15vh 0; 
-    }
-    
-    .carousel-slide img {
-        width: 60vw; /* Imagem maior em mobile */
-    }
-
-    .carousel-prev-btn, .carousel-next-btn {
-        padding: 2.5vw; 
-        font-size: 4vw;
-    }
-    
-    section{
-        height: 25vh; /* Deixa a altura se ajustar ao conteúdo em mobile */
-    }
-
-
-    /* --- 4. FOOTER (Mobile) --- */
-
-    footer {
-        /* *** MUDANÇA ESSENCIAL: Retira o footer do fluxo fixo *** */
-        position: static !important;
-        bottom: auto !important;
-        /* ****************************************************** */
-        
-        /* Padding e fonte responsivos */
-        padding: 4vw 0 2vw; 
-        font-size: 3vw; 
-    }
-
-    .social-links-container {
-        gap: 5vw; 
-        margin-bottom: 3vw;
-    }
-
-    .social-links-container img{
-        width: 6vw; 
-        height: 6vw;
-    }
-
-    .redesocial {
-        margin: 0 3vw; 
-    }
-
-    .redesocial h3 {
-        padding-bottom: 0.5vw;
-        font-size: 10px;
-    }
-
-    .redesocial h3::after {
-        height: 0.3vw; 
-    }
-    
-    .copyright {
-        font-size: 2.8vw; 
-    }
-
-
-    /* --- 5. BOTÃO "VOLTAR AO TOPO" (Mobile) --- */
-
-    #backToTop {
-        /* O botão "Voltar ao Topo" geralmente continua fixo, 
-           mas precisa de um novo ajuste de posição */
-        bottom: 5vw; /* Ajustado para não colidir com o footer que agora é estático */
-        right: 5vw;
-    }
-
-    #backToTop img {
-        opacity: 90%;
-        position: relative;
-        bottom: 10vh;
-        left: 0.5vh;
-        width: 12vw;
-        height: 12vw;
+    .carousel-prev-btn,
+    .carousel-next-btn {
+        z-index: 1200;
+        /* Volta ao normal em desktop */
     }
 }
 
+/* Mobile adjustment */
+@media (max-width: 767px) {
+    #backToTop {
+        bottom: 30px;
+    }
 
+    .menuWindow {
+        height: 20vh;
+        z-index: 900;
+        /* Use top para a animação - mais confiável para z-index */
+        top: -20vh;
+        transform: none;
+        transition: top 0.6s ease-out, visibility 0.6s;
+    }
 
+    .menuWindow.active {
+        top: 70px;
+        /* Desce até ficar abaixo do header */
+        transform: none;
+    }
 
+    header {
+        z-index: 1000;
+    }
+}

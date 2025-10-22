@@ -1,79 +1,143 @@
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // ============================
+    // 1. Lógica do Menu Hambúrguer (Universal)
+    // ============================
+    const hamburguer = document.getElementById('hamburguer');
+    const menuWindow = document.getElementById('menuWindow');
+    const fundoTranslucido = document.getElementById('fundoTranslucido');
 
-    // 1. Efeito Hamburguer
-    const hamburguer = document.getElementById("hamburguer");
-    const menuWindow = document.querySelector(".menuWindow");
+    function openMenu() {
+        menuWindow.classList.add('active');
+        hamburguer.classList.add('active');
+        // A manta cinza (fundoTranslucido) só é ativada se estivermos em DESKTOP
+        if (window.innerWidth >= 768) { 
+            fundoTranslucido.classList.add('active');
+            document.body.classList.add('menu-open'); // Previne scroll
+        }
+    }
+    
+    function closeMenu() {
+        menuWindow.classList.remove('active');
+        hamburguer.classList.remove('active');
+        fundoTranslucido.classList.remove('active');
+        document.body.classList.remove('menu-open'); // Permite scroll
+    }
 
-    hamburguer.addEventListener("click", () => {
-        hamburguer.classList.toggle("active");
-        menuWindow.classList.toggle("active");
-    });
-
-    // 2. SCRIPT DO CARROSSEL
-    // AGORA ESTÁ SEGURO, POIS O DOM JÁ CARREGOU
-    const track = document.querySelector('.carousel-track');
-    // Verifique se o track existe antes de continuar
-    if (track) {
-        const slides = Array.from(track.children);
-        const nextButton = document.querySelector('.carousel-next-btn');
-        const prevButton = document.querySelector('.carousel-prev-btn');
-        
-        // Acesso seguro, pois slides está definido
-        if (slides.length > 0) {
-            const slideWidth = slides[0].getBoundingClientRect().width;
-
-            let slideIndex = 0;
-
-            const setSlidePosition = (slide, index) => {
-                slide.style.left = slideWidth * index + 'px';
-            };
-
-            slides.forEach(setSlidePosition);
-
-            const moveToSlide = (track, currentSlide, targetSlide) => {
-                track.style.transform = 'translateX(-' + (targetSlide.style.left || '0px') + ')';
-                currentSlide.classList.remove('current-slide');
-                targetSlide.classList.add('current-slide');
-            };
-
-            nextButton.addEventListener('click', e => {
-                const currentSlide = track.querySelector('.current-slide') || slides[0];
-                const nextSlide = currentSlide.nextElementSibling ? currentSlide.nextElementSibling : slides[0];
-                moveToSlide(track, currentSlide, nextSlide);
-            });
-
-            prevButton.addEventListener('click', e => {
-                const currentSlide = track.querySelector('.current-slide') || slides[0];
-                const prevSlide = currentSlide.previousElementSibling ? currentSlide.previousElementSibling : slides[slides.length - 1];
-                moveToSlide(track, currentSlide, prevSlide);
-            });
-
-            slides[0].classList.add('current-slide');
+    function handleHamburguerClick(e) {
+        e.stopPropagation();
+        if (menuWindow.classList.contains('active')) closeMenu();
+        else openMenu();
+    }
+    
+    // ============================
+    // Lógica Responsiva para o Hambúrguer
+    // ============================
+    function toggleHamburguerVisibility() {
+        if (window.innerWidth >= 768) {
+            // Desktop: Esconde o hambúrguer e fecha o menu
+            hamburguer.style.display = 'none';
+            closeMenu();
+        } else {
+            // Mobile: Mostra o hambúrguer
+            hamburguer.style.display = 'flex';
         }
     }
 
+    if (hamburguer && menuWindow && fundoTranslucido) {
+        // Inicializa a visibilidade
+        toggleHamburguerVisibility();
+        window.addEventListener('resize', toggleHamburguerVisibility);
 
-    // 3. JS BACK-TO-TOP
-    // AGORA ESTÁ SEGURO PARA SER EXECUTADO
-    const backToTopButton = document.getElementById('backToTop');
+        // Event Listeners Principais
+        hamburguer.addEventListener('click', handleHamburguerClick);
+        
+        // Fundo translúcido só fecha o menu se estiver ativo (Desktop)
+        fundoTranslucido.addEventListener('click', closeMenu); 
 
-    if (backToTopButton) {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && menuWindow.classList.contains('active')) closeMenu();
+        });
 
-        window.onscroll = function() {
-            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-                backToTopButton.style.display = "block";
-            } else {
-                backToTopButton.style.display = "none";
+        // Fecha o dropdown se clicar fora (funciona em mobile e desktop)
+        document.addEventListener('click', (e) => {
+            // Verifica se o menu está aberto e se o clique foi fora do menu/hambúrguer
+            if (menuWindow.classList.contains('active')) {
+                if (!menuWindow.contains(e.target) && !hamburguer.contains(e.target)) {
+                    closeMenu();
+                }
             }
-        };
-
-        backToTopButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
         });
     }
 
-}); // Fim do DOMContentLoaded
+
+    // ============================
+    // 2. SCRIPT DO CARROSSEL (Lógica robusta mantida)
+    // ============================
+    const track = document.querySelector('.carousel-track');
+    const trackWrapper = document.querySelector('.carousel-track-wrapper');
+
+    if (track && trackWrapper) {
+        const slides = Array.from(track.querySelectorAll('.carousel-slide'));
+        const nextButton = document.querySelector('.carousel-next-btn');
+        const prevButton = document.querySelector('.carousel-prev-btn');
+
+        let slideWidth = trackWrapper.getBoundingClientRect().width;
+
+        function setSlidesSizesAndPositions() 
+        {
+            slideWidth = trackWrapper.getBoundingClientRect().width || window.innerWidth;
+            slides.forEach((slide, i) => {
+                slide.style.width = slideWidth + 'px';
+                slide.style.left = (slideWidth * i) + 'px';
+            });
+            // Garante que a posição atual esteja visível após resize
+            const current = track.querySelector('.current-slide') || slides[0];
+            if (current) {
+                track.style.transform = 'translateX(-' + current.style.left + ')';
+            }
+        }
+
+        // init
+        setSlidesSizesAndPositions();
+        window.addEventListener('resize', setSlidesSizesAndPositions);
+
+        // estado
+        let currentIndex = 0;
+        slides.forEach(s => s.classList.remove('current-slide'));
+        if (slides.length) slides[0].classList.add('current-slide');
+
+        function moveToIndex(index) 
+        {
+            if (!slides.length) return;
+            if (index < 0) index = slides.length - 1;
+            if (index >= slides.length) index = 0;
+            const target = slides[index];
+            track.style.transform = 'translateX(-' + target.style.left + ')';
+            track.querySelector('.current-slide')?.classList.remove('current-slide');
+            target.classList.add('current-slide');
+            currentIndex = index;
+        }
+
+        if (nextButton) nextButton.addEventListener('click', () => moveToIndex(currentIndex + 1));
+        if (prevButton) prevButton.addEventListener('click', () => moveToIndex(currentIndex - 1));
+    }
+
+
+    // ============================
+    // 3. JS BACK-TO-TOP
+    // ============================
+    const backToTopButton = document.getElementById('backToTop');
+    if (backToTopButton) {
+        window.addEventListener('scroll', () => {
+            if (document.documentElement.scrollTop > 200) backToTopButton.style.display = 'block';
+            else backToTopButton.style.display = 'none';
+        });
+
+        backToTopButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+});
