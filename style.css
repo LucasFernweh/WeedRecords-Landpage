@@ -158,27 +158,157 @@ header {
     border-bottom: 1px solid #eee;
 }
 
-.menuWindow li:last-child {
-    border-bottom: none;
-}
+/* Valores de variáveis SASS substituídos por valores fixos de exemplo */
+/* $pad = 10px; $extra = 20px; $thick = 2px; $color = #3498db; */
 
-.menuWindow a {
-    color: #222;
-    text-decoration: none;
-    position: relative;
-    font-weight: 500;
-    font-size: 16px;
-    display: block;
+.menuWindow .itemmenu a {
+    color: black;
     padding: 10px 20px;
+    /* $pad $extra */
+    display: inline-block;
+    border: 2px solid transparent;
+    /* $thick */
+    position: relative;
+    font-size: 14px;
+    cursor: pointer;
+    letter-spacing: 0.07em;
+    text-decoration: none;
+    /* Adicionado para links de menu */
 }
 
-/* Hover em Mobile (sem underline animado, apenas background) */
-.menuWindow a::after {
-    display: none;
+.menuWindow .itemmenu a .text {
+    /* padding: 0 0.3em; */
+    transform: translate3d(0, 10px, 0);
+    /* $pad */
+    display: block;
+    transition: transform 0.2s cubic-bezier(.2, 0, 0, 1) 0.4s;
 }
 
-.menuWindow a:hover {
-    background-color: #eee;
+.menuWindow .itemmenu a:after {
+    position: absolute;
+    content: '';
+    bottom: -2px;
+    /* -$thick */
+    left: 20px;
+    /* $extra */
+    right: 20px;
+    /* $extra */
+    height: 2px;
+    /* $thick */
+    background: orange;
+    /* $color */
+    /* z-index: -1; */
+    transition:
+        transform 0.8s cubic-bezier(1, 0, .37, 1) 0.2s,
+        right 0.2s cubic-bezier(.04, .48, 0, 1) 0.6s,
+        left 0.4s cubic-bezier(.04, .48, 0, 1) 0.6s;
+    transform-origin: left;
+}
+
+.menuWindow .itemmenu .line {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.522);
+    /* $color */
+}
+
+.menuWindow .itemmenu .line.-right,
+.menuWindow .itemmenu .line.-left {
+    width: 2px;
+    /* $thick */
+    bottom: -2px;
+    /* -$thick */
+    top: -2px;
+    /* -$thick */
+    transform: scale3d(1, 0, 1);
+}
+
+.menuWindow .itemmenu .line.-top,
+.menuWindow .itemmenu .line.-bottom {
+    height: 2px;
+    /* $thick */
+    left: -2px;
+    /* -$thick */
+    right: -2px;
+    /* -$thick */
+    transform: scale3d(0, 1, 1);
+}
+
+.menuWindow .itemmenu .line.-right {
+    right: -2px;
+    /* -$thick */
+    transition: transform 0.1s cubic-bezier(1, 0, .65, 1.01) 0.23s;
+    transform-origin: top;
+}
+
+.menuWindow .itemmenu .line.-top {
+    top: -2px;
+    /* -$thick */
+    transition: transform 0.08s linear 0.43s;
+    transform-origin: left;
+}
+
+.menuWindow .itemmenu .line.-left {
+    left: -2px;
+    /* -$thick */
+    transition: transform 0.08s linear 0.51s;
+    transform-origin: bottom;
+}
+
+.menuWindow .itemmenu .line.-bottom {
+    bottom: -2px;
+    /* -$thick */
+    transition: transform 0.3s cubic-bezier(1, 0, .65, 1.01);
+    transform-origin: right;
+}
+
+/* ------------------------------------------------------------------ */
+/* HOVER STATE */
+/* ------------------------------------------------------------------ */
+
+.menuWindow .itemmenu a:hover,
+.menuWindow .itemmenu a:active {
+
+    .text {
+        transform: translate3d(0, 0, 0);
+        transition: transform 0.6s cubic-bezier(.2, 0, 0, 1) 0.4s;
+    }
+
+    &:after {
+        transform: scale3d(0, 1, 1);
+        right: -2px;
+        /* -$thick */
+        left: -2px;
+        /* -$thick */
+        transform-origin: right;
+        transition:
+            transform 0.2s cubic-bezier(1, 0, .65, 1.01) 0.17s,
+            right 0.2s cubic-bezier(1, 0, .65, 1.01),
+            left 0s 0.3s;
+    }
+
+    .line {
+        transform: scale3d(1, 1, 1);
+
+        &.-right {
+            transition: transform 0.1s cubic-bezier(1, 0, .65, 1.01) 0.2s;
+            transform-origin: bottom;
+        }
+
+        &.-top {
+            transition: transform 0.08s linear 0.4s;
+            transform-origin: right;
+        }
+
+        &.-left {
+            transition: transform 0.08s linear 0.48s;
+            transform-origin: top;
+        }
+
+        &.-bottom {
+            transition: transform 0.5s cubic-bezier(0, .53, .29, 1) 0.56s;
+            transform-origin: left;
+        }
+    }
 }
 
 /* =======================================
@@ -297,29 +427,69 @@ header {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 20vh;
-    height: 20vh;
+    width: 50vh;
+    height: 50vh;
 }
 
+/* ===========================
+    CARROSSEL NAVIGATION (Botões de Navegação)
+    =========================== */
+
+/* Estilos Base: Posição, Tamanho e Cor Inicial */
 .carousel-prev-btn,
 .carousel-next-btn {
     position: absolute;
     top: 50%;
+    width: 45px; /* Aumentei um pouco para melhor toque */
+    height: 45px; /* Mantenho quadrado para o círculo */
     transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    padding: 10px;
+    
+    /* Cores Escuras e Arredondamento */
+    background: rgba(34, 34, 34, 0.8); /* Cinza escuro/quase preto com transparência */
+    color: #f0f0f0; /* Texto quase branco */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Borda sutil */
+    border-radius: 50%; /* Faz o botão ser circular */
+    
+    padding: 0; /* Removido o padding desnecessário para o círculo */
+    font-size: 1.5rem; /* Aumenta um pouco os símbolos < e > */
+    line-height: 45px; /* Centraliza verticalmente o texto */
+    text-align: center;
     cursor: pointer;
     z-index: 100;
+    
+    /* Efeito de Transição Suave */
+    transition: all 0.3s ease-in-out;
 }
 
+/* Posições */
 .carousel-prev-btn {
-    left: 10px;
+    left: 20px; /* Mais perto da borda */
 }
 
 .carousel-next-btn {
-    right: 10px;
+    right: 20px; /* Mais perto da borda */
+}
+
+/* Estilo Hover/Foco: Efeitos Legais */
+.carousel-next-btn:hover,
+.carousel-prev-btn:hover {
+    /* Efeito 1: Sombra Externa (Profundidade) */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 10px rgba(100, 100, 100, 0.5); 
+    
+    /* Efeito 2: Cor (Feedback Visual) */
+    background: #000000; /* Fundo totalmente preto no hover */
+    color: #ffffff;
+    
+    /* Efeito 3: Escala (Pequena Animação de Pulsar) */
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* Efeito de "Pressionar" para feedback imediato */
+.carousel-next-btn:active,
+.carousel-prev-btn:active {
+    transform: translateY(-50%) scale(0.95);
+    background: #333333;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.7) inset; /* Sombra interna ao clicar */
 }
 
 /* MEDIA QUERY: DESKTOP - Ajustes específicos */
