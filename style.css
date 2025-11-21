@@ -566,39 +566,6 @@ header {
     font-size: 1.1rem;
     line-height: 1.6;
 }
-
-/* RESPONSIVO PARA CELULAR */
-@media (max-width: 768px) {
-    .duas-colunas {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .coluna-foto img {
-        width: 90%;
-    }
-    .coluna-foto{
-        display: none;
-    }
-    #quem-somos{
-        display: flex;
-        justify-content: center;
-    }
-    #quem-somos h2{
-        text-align: center;
-    }
-    .carousel-slide img{
-        width: 80%;
-    }
-    #linha_preta{
-        display: none;
-    }
-    .titulo-container-wrapper .titulo-moderno{
-        font-size: 30px;
-    }
-}
-
-
 /* ------------------------------- */
 /* ===========================
     FOOTER E BACK-TO-TOP
