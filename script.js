@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // ============================
     // 1. Lógica do Menu Hambúrguer (Universal)
     // ============================
@@ -11,12 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
         menuWindow.classList.add('active');
         hamburguer.classList.add('active');
         // A manta cinza (fundoTranslucido) só é ativada se estivermos em DESKTOP
-        if (window.innerWidth >= 768) { 
+        if (window.innerWidth >= 768) {
             fundoTranslucido.classList.add('active');
             document.body.classList.add('menu-open'); // Previne scroll
         }
     }
-    
+
     function closeMenu() {
         menuWindow.classList.remove('active');
         hamburguer.classList.remove('active');
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (menuWindow.classList.contains('active')) closeMenu();
         else openMenu();
     }
-    
+
     // ============================
     // Lógica Responsiva para o Hambúrguer
     // ============================
@@ -51,9 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Event Listeners Principais
         hamburguer.addEventListener('click', handleHamburguerClick);
-        
+
         // Fundo translúcido só fecha o menu se estiver ativo (Desktop)
-        fundoTranslucido.addEventListener('click', closeMenu); 
+        fundoTranslucido.addEventListener('click', closeMenu);
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && menuWindow.classList.contains('active')) closeMenu();
@@ -84,8 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let slideWidth = trackWrapper.getBoundingClientRect().width;
 
-        function setSlidesSizesAndPositions() 
-        {
+        function setSlidesSizesAndPositions() {
             slideWidth = trackWrapper.getBoundingClientRect().width || window.innerWidth;
             slides.forEach((slide, i) => {
                 slide.style.width = slideWidth + 'px';
@@ -107,8 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         slides.forEach(s => s.classList.remove('current-slide'));
         if (slides.length) slides[0].classList.add('current-slide');
 
-        function moveToIndex(index) 
-        {
+        function moveToIndex(index) {
             if (!slides.length) return;
             if (index < 0) index = slides.length - 1;
             if (index >= slides.length) index = 0;
@@ -139,5 +137,41 @@ document.addEventListener('DOMContentLoaded', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
+
+    // ============================
+    // 4. Smooth scroll para Links de Âncora (AGORA COM CÁLCULO DE OFFSET)
+    // ============================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        // Ignora links que são apenas '#' vazios
+        if (anchor.getAttribute('href') === '#') return;
+
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            // Fecha o menu (importante para mobile)
+            if (menuWindow.classList.contains('active')) {
+                closeMenu();
+            }
+
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+
+            if (targetElement) {
+                // Cálculo de posição para compensar o header fixo (70px)
+                const headerHeight = 70;
+                
+                // Posição vertical do elemento no documento
+                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+                
+                // Posição final: topo do elemento menos a altura do header
+                const finalPosition = targetPosition - headerHeight;
+
+                window.scrollTo({
+                    top: finalPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
 
 });

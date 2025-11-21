@@ -18,6 +18,10 @@ body {
     padding-bottom: 0;
 }
 
+strong {
+    font-weight: 700;
+}
+
 /* Previne scroll quando o menu está aberto */
 .menu-open {
     overflow: hidden;
@@ -197,7 +201,7 @@ header {
     /* $thick */
     background: orange;
     /* $color */
-    /* z-index: -1; */
+    z-index: -1; /* ADICIONADO Z-INDEX PARA NÃO INTERCEPTAR O CLIQUE */
     transition:
         transform 0.8s cubic-bezier(1, 0, .37, 1) 0.2s,
         right 0.2s cubic-bezier(.04, .48, 0, 1) 0.6s,
@@ -209,6 +213,7 @@ header {
     position: absolute;
     background: rgba(0, 0, 0, 0.522);
     /* $color */
+    z-index: -1; /* ADICIONADO Z-INDEX PARA NÃO INTERCEPTAR O CLIQUE */
 }
 
 .menuWindow .itemmenu .line.-right,
@@ -262,11 +267,10 @@ header {
 }
 
 /* ------------------------------------------------------------------ */
-/* HOVER STATE */
+/* HOVER STATE (PSEUDO-CLASSE :active REMOVIDA AQUI PARA CORRIGIR O SCROLL) */
 /* ------------------------------------------------------------------ */
 
-.menuWindow .itemmenu a:hover,
-.menuWindow .itemmenu a:active {
+.menuWindow .itemmenu a:hover {
 
     .text {
         transform: translate3d(0, 0, 0);
@@ -340,7 +344,7 @@ header {
     .menuWindow li {
         width: auto;
         border-bottom: none;
-        text-align: left;
+        text-align: left; /* CORREÇÃO: Alinhamento correto em desktop */
     }
 
     .menuWindow a {
@@ -425,11 +429,30 @@ header {
 
 .carousel-slide img {
     display: block;
+    width: 75vh;
+    height: 50vh;
     margin-left: auto;
     margin-right: auto;
-    width: 50vh;
-    height: 50vh;
+    
+    object-fit: cover; /* deixa a imagem sempre preenchida e proporcional */
+    border-radius: 18px; /* cantos arredondados modernos */
+    
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35); /* sombra elegante */
+    transition: 
+        transform 0.4s ease,
+        box-shadow 0.4s ease,
+        filter 0.4s ease;
+    
+    filter: brightness(0.92) contrast(1.05); /* leve tratamento visual */
 }
+
+/* Hover para efeito premium */
+.carousel-slide img:hover {
+    transform: scale(1.03); /* zoom suave */
+    box-shadow: 0 12px 30px rgba(0,0,0,0.5); /* aprofunda a sombra */
+    filter: brightness(1) contrast(1.12); /* imagem mais viva */
+}
+
 
 /* ===========================
     CARROSSEL NAVIGATION (Botões de Navegação)
@@ -440,46 +463,57 @@ header {
 .carousel-next-btn {
     position: absolute;
     top: 50%;
-    width: 45px; /* Aumentei um pouco para melhor toque */
-    height: 45px; /* Mantenho quadrado para o círculo */
+    width: 45px;
+    /* Aumentei um pouco para melhor toque */
+    height: 45px;
+    /* Mantenho quadrado para o círculo */
     transform: translateY(-50%);
-    
+
     /* Cores Escuras e Arredondamento */
-    background: rgba(34, 34, 34, 0.8); /* Cinza escuro/quase preto com transparência */
-    color: #f0f0f0; /* Texto quase branco */
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Borda sutil */
-    border-radius: 50%; /* Faz o botão ser circular */
-    
-    padding: 0; /* Removido o padding desnecessário para o círculo */
-    font-size: 1.5rem; /* Aumenta um pouco os símbolos < e > */
-    line-height: 45px; /* Centraliza verticalmente o texto */
+    background: rgba(34, 34, 34, 0.8);
+    /* Cinza escuro/quase preto com transparência */
+    color: #f0f0f0;
+    /* Texto quase branco */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    /* Borda sutil */
+    border-radius: 50%;
+    /* Faz o botão ser circular */
+
+    padding: 0;
+    /* Removido o padding desnecessário para o círculo */
+    font-size: 1.5rem;
+    /* Aumenta um pouco os símbolos < e > */
+    line-height: 45px;
+    /* Centraliza verticalmente o texto */
     text-align: center;
     cursor: pointer;
-    z-index: 100;
-    
+    z-index: 5;
     /* Efeito de Transição Suave */
     transition: all 0.3s ease-in-out;
 }
 
 /* Posições */
 .carousel-prev-btn {
-    left: 20px; /* Mais perto da borda */
+    left: 20px;
+    /* Mais perto da borda */
 }
 
 .carousel-next-btn {
-    right: 20px; /* Mais perto da borda */
+    right: 20px;
+    /* Mais perto da borda */
 }
 
 /* Estilo Hover/Foco: Efeitos Legais */
 .carousel-next-btn:hover,
 .carousel-prev-btn:hover {
     /* Efeito 1: Sombra Externa (Profundidade) */
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 10px rgba(100, 100, 100, 0.5); 
-    
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 10px rgba(100, 100, 100, 0.5);
+
     /* Efeito 2: Cor (Feedback Visual) */
-    background: #000000; /* Fundo totalmente preto no hover */
+    background: #000000;
+    /* Fundo totalmente preto no hover */
     color: #ffffff;
-    
+
     /* Efeito 3: Escala (Pequena Animação de Pulsar) */
     transform: translateY(-50%) scale(1.1);
 }
@@ -489,19 +523,70 @@ header {
 .carousel-prev-btn:active {
     transform: translateY(-50%) scale(0.95);
     background: #333333;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.7) inset; /* Sombra interna ao clicar */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.7) inset;
+    /* Sombra interna ao clicar */
 }
 
 /* MEDIA QUERY: DESKTOP - Ajustes específicos */
 @media (min-width: 768px) {
 
-    .carousel-prev-btn,
-    .carousel-next-btn {
-        /* Volta o z-index alto para ficar acima de outros elementos na seção */
-        z-index: 1200;
+}
+
+/* QUEM SOMOS CORPO */
+
+#quem-somos {
+    /* REMOVIDO PADDING-TOP E MARGIN-TOP, JÁ TRATADO PELO JS DE SCROLL */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: 40px 20px;
+}
+
+/* FOTO */
+.coluna-foto img {
+    width: 350px;
+    height: auto;
+    border-radius: 14px;
+    object-fit: cover;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* TEXTO */
+.coluna-texto {
+    max-width: 500px;
+}
+
+.coluna-texto h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.coluna-texto p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* RESPONSIVO PARA CELULAR */
+@media (max-width: 768px) {
+    .duas-colunas {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .coluna-foto img {
+        width: 90%;
     }
 }
 
+
+
+
+
+
+
+
+/* ------------------------------- */
 /* ===========================
     FOOTER E BACK-TO-TOP
     =========================== */
@@ -647,11 +732,6 @@ footer {
     ======================================= */
 @media (min-width: 768px) {
 
-    .carousel-prev-btn,
-    .carousel-next-btn {
-        z-index: 1200;
-        /* Volta ao normal em desktop */
-    }
 }
 
 /* Mobile adjustment */
@@ -677,5 +757,62 @@ footer {
 
     header {
         z-index: 1000;
+    }
+}
+
+/* CSS TITULO GALERA DE FOTOS */
+.titulo-container-wrapper{
+    text-align: center;
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+}
+.titulo-moderno {
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #111;
+    position: relative;
+    display: inline-block;
+    cursor: default;
+
+    /* efeito suave de entrada */
+    opacity: 0;
+    transform: translateY(15px);
+    animation: tituloFadeIn 0.8s ease forwards;
+}
+
+/* Linha animada embaixo */
+.titulo-moderno::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #000, #444);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+}
+
+/* Hover principal */
+.titulo-moderno:hover {
+    color: #000;
+    letter-spacing: 3px;
+    transform: scale(1.03);
+    transition: all 0.35s ease;
+}
+
+/* Hover da linha */
+.titulo-moderno:hover::after {
+    transform: scaleX(1);
+}
+
+/* animação de entrada */
+@keyframes tituloFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
